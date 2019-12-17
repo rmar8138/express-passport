@@ -4,6 +4,7 @@ const exphbs = require("express-handlebars");
 const morgan = require("morgan");
 const expressSession = require("express-session");
 const MongoStore = require("connect-mongo")(expressSession);
+const passport = require("./config/passport");
 const app = express();
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -25,6 +26,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use(morgan("combined"));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(require("./routes"));
 

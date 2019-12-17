@@ -1,4 +1,5 @@
 const express = require("express");
+const passport = require("passport");
 const { celebrate, Joi, Segments } = require("celebrate");
 const PageController = require("../controllers/page_controller");
 const AuthenticationController = require("../controllers/authentication_controller");
@@ -32,7 +33,10 @@ router.post(
       password: Joi.string().required()
     }
   }),
-  AuthenticationController.loginCreate
+  passport.authenticate("local", {
+    successRedirect: "/dashboard",
+    failureRedirect: "/login"
+  })
 );
 
 router.get("/logout", AuthenticationController.logout);

@@ -4,7 +4,7 @@ const index = (req, res) => {
 };
 
 const dashboard = (req, res) => {
-  res.render("pages/dashboard");
+  res.render("pages/dashboard", { user: req.user });
 };
 
 module.exports = {
