@@ -1,5 +1,6 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
 const UserModel = require("../database/models/user_model");
 
 passport.serializeUser((user, done) => {
@@ -24,6 +25,24 @@ passport.use(
       const user = await UserModel.findOne({ email }).catch(done);
 
       if (!user || !user.verifyPasswordSync(password)) {
+        return done(null, false);
+      }
+
+      return done(null, user);
+    }
+  )
+);
+
+passport.use(
+  new JwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: process.env.JWT_SECRET
+    },
+    async (jwtPayload, done) => {
+      const user = await UserModel.findById(jwtPayload.sub).catch(done);
+
+      if (!user) {
         return done(null, false);
       }
 

@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const UserModel = require("../database/models/user_model");
 
 const registerNew = (req, res) => {
@@ -21,27 +22,10 @@ const loginNew = (req, res) => {
   res.render("authentication/login");
 };
 
-// const loginCreate = async (req, res) => {
-//   const { email, password } = req.body;
-//   const user = await UserModel.findOne({ email });
-
-//   if (!user) {
-//     return res.render("authentication/login", {
-//       error: "Invalid email & password "
-//     });
-//   }
-
-//   const valid = await user.verifyPassword(password);
-
-//   if (!valid) {
-//     return res.render("authentication/login", {
-//       error: "Invalid email & password "
-//     });
-//   }
-
-//   req.session.user = user;
-//   res.redirect("/dashboard");
-// };
+const loginCreate = (req, res) => {
+  const token = jwt.sign({ sub: req.user._id }, process.env.JWT_SECRET);
+  res.json(token);
+};
 
 const logout = (req, res) => {
   req.logout();

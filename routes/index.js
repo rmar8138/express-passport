@@ -21,7 +21,11 @@ router.post(
   AuthenticationController.registerCreate
 );
 
-router.get("/dashboard", authRedirect, PageController.dashboard);
+router.get(
+  "/dashboard",
+  passport.authenticate("jwt", { session: false }),
+  PageController.dashboard
+);
 
 router.get("/login", AuthenticationController.loginNew);
 
@@ -34,9 +38,10 @@ router.post(
     }
   }),
   passport.authenticate("local", {
-    successRedirect: "/dashboard",
-    failureRedirect: "/login"
-  })
+    failureRedirect: "/login",
+    session: false // dont save user to session, we be using jwt
+  }),
+  AuthenticationController.loginCreate
 );
 
 router.get("/logout", AuthenticationController.logout);
