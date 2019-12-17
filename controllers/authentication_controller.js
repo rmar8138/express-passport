@@ -24,11 +24,13 @@ const loginNew = (req, res) => {
 
 const loginCreate = (req, res) => {
   const token = jwt.sign({ sub: req.user._id }, process.env.JWT_SECRET);
-  res.json(token);
+  res.cookie("jwt", token);
+  res.redirect("/dashboard");
 };
 
 const logout = (req, res) => {
   req.logout();
+  res.cookie("jwt", null, { maxAge: -1 }); // destroy cookie by setting exp date in the past
   res.redirect("/");
 };
 

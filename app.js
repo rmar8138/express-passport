@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const exphbs = require("express-handlebars");
 const morgan = require("morgan");
 const expressSession = require("express-session");
+const cookieParser = require("cookie-parser");
 const MongoStore = require("connect-mongo")(expressSession);
 const passport = require("./config/passport");
 const app = express();
@@ -21,6 +22,8 @@ app.use(
     store: new MongoStore({ mongooseConnection: mongoose.connection })
   })
 );
+
+app.use(cookieParser());
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
